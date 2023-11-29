@@ -26,10 +26,17 @@ class _PopularScreenState extends State<PopularScreen> {
         future: popularApi!.getAllPopular(),
         builder:(context, AsyncSnapshot<List<PopularModel>?> snapshot) {
           if( snapshot.hasData ){
-            return ListView.builder(
+            return GridView.builder(
+              padding: EdgeInsets.all(10),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                childAspectRatio: .7,
+                crossAxisSpacing: 10
+              ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return Text(snapshot.data![index].title!);
+                return cardPopular(snapshot.data![index]);
               },
             );
           }else{
@@ -46,4 +53,18 @@ class _PopularScreenState extends State<PopularScreen> {
       ),
     );
   }
+
+  Widget cardPopular(PopularModel popularModel){
+    return Container(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: FadeInImage(
+          fit: BoxFit.fill,
+          image:NetworkImage('https://image.tmdb.org/t/p/w500/${popularModel.posterPath}') ,
+          placeholder: AssetImage('assets/loading.gif'),
+        ),
+      ),
+    );
+  }
+
 }
